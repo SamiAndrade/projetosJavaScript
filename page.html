@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="/assets/styles/style.css">
+    <title>Filmes</title>
+</head>
+<body>
+  <header>
+    <nav class="nav-bar">
+      <a href="/"><img src="/assets/img/logoFilmes.png" alt="Logo do site"></a>
+      <section class="ancoras">
+        <form id="form-busca">
+          <input type="text" id="input-busca" placeholder="Digite o nome do filme..." required>
+          <button type="submit">Buscar</button>
+        </form>
+        <a href="#sobre">Sobre</a>
+        <a href="/">Home</a>
+      </section>
+    </nav>
+  </header>
+  <main>
+    <h1>Catálogo de Filmes (OMDb)</h1>
+  
+    <div id="filmes"></div>
+  </main>
+  
+  <footer>
+     <p>&copy; 2025 Catálogo de Filmes. Todos os direitos reservados.</p>
+    <p>Dados fornecidos por <a href="https://www.omdbapi.com/" target="_blank" rel="noopener noreferrer">OMDb API</a>.</p>
+  </footer>
+
+    <script src="/assets/script/script.js"></script>
+</body>
+</html>
