@@ -4,31 +4,47 @@ const URL_BASE = 'https://www.omdbapi.com/';
 const form = document.getElementById('form-busca');
 const input = document.getElementById('input-busca');
 const divFilmes = document.getElementById('filmes');
+const botaoContainer = document.getElementById('botao-carregar-container');
 
-form.addEventListener('submit', async function (e) {
+let currentPage = 1;
+let currentQuery = '';
+let btnCarregarMais = null;
+
+form.addEventListener('submit', e => {
   e.preventDefault();
 
   const termo = input.value.trim();
   if (!termo) return;
 
-  const url = `${URL_BASE}?apikey=${API_KEY}&s=${encodeURIComponent(termo)}`;
+  currentQuery = termo;
+  currentPage = 1;
+  divFilmes.innerHTML = '';
+  removerBotaoCarregarMais();
+
+  buscarFilmes(currentQuery, currentPage, true);
+});
+
+async function buscarFilmes(query, page = 1, limpar = false) {
+  const url = `${URL_BASE}?apikey=${API_KEY}&s=${encodeURIComponent(query)}&page=${page}`;
 
   try {
     const res = await fetch(url);
     const data = await res.json();
 
     if (data.Response === "True") {
-      mostrarFilmes(data.Search);
+      mostrarFilmes(data.Search, limpar);
+      mostrarBotaoCarregarMais();
     } else {
-      divFilmes.innerHTML = `<p>Nenhum filme encontrado com esse nome.</p>`;
+      divFilmes.innerHTML = `<p>Nenhum filme encontrado.</p>`;
+      removerBotaoCarregarMais();
     }
   } catch (err) {
     console.error('Erro ao buscar filmes:', err);
   }
-});
+}
 
-function mostrarFilmes(filmes) {
-  divFilmes.innerHTML = '';
+function mostrarFilmes(filmes, limpar = false) {
+  if (limpar) divFilmes.innerHTML = '';
 
   filmes.forEach(filme => {
     const card = document.createElement('div');
@@ -44,11 +60,24 @@ function mostrarFilmes(filmes) {
   });
 }
 
-function teclaEnter() {
-   this.display.addEventListener('keyup', e => {
-                if(e.keyCode === 13) {
-                    this.mostrarFilmes(data.Search);
-                }
-              })
+function mostrarBotaoCarregarMais() {
+  if (!btnCarregarMais) {
+    btnCarregarMais = document.createElement('button');
+    btnCarregarMais.textContent = 'Carregar mais';
+    btnCarregarMais.className = 'addMore';
 
+    btnCarregarMais.addEventListener('click', () => {
+      currentPage++;
+      buscarFilmes(currentQuery, currentPage);
+    });
+
+    botaoContainer.appendChild(btnCarregarMais);
+  }
+}
+
+function removerBotaoCarregarMais() {
+  if (btnCarregarMais) {
+    btnCarregarMais.remove();
+    btnCarregarMais = null;
+  }
 }
